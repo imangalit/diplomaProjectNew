@@ -7,21 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		ED28977D29C4BE0B00B2D5DB /* FirstFloorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED28977C29C4BE0B00B2D5DB /* FirstFloorView.swift */; };
 		ED2924AD29C62DFF008593D8 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2924AC29C62DFF008593D8 /* MenuView.swift */; };
-		ED6D971829C86E86009585EC /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6D971729C86E86009585EC /* MenuViewController.swift */; };
+		ED5151CD29D46924003D66B6 /* database.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5151CC29D46924003D66B6 /* database.swift */; };
+		ED5151CF29D46954003D66B6 /* FloorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5151CE29D46954003D66B6 /* FloorView.swift */; };
 		ED75386029BA166400DDFAFD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75385F29BA166400DDFAFD /* AppDelegate.swift */; };
 		ED75386429BA166400DDFAFD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED75386329BA166400DDFAFD /* ViewController.swift */; };
 		ED75386A29BA166400DDFAFD /* diplomaProject.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ED75386829BA166400DDFAFD /* diplomaProject.xcdatamodeld */; };
 		ED75386C29BA166600DDFAFD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED75386B29BA166600DDFAFD /* Assets.xcassets */; };
 		ED75386F29BA166600DDFAFD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED75386D29BA166600DDFAFD /* LaunchScreen.storyboard */; };
-		EDBAF71D29C38C7900188002 /* database.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDBAF71C29C38C7900188002 /* database.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		ED28977C29C4BE0B00B2D5DB /* FirstFloorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstFloorView.swift; sourceTree = "<group>"; };
 		ED2924AC29C62DFF008593D8 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
-		ED6D971729C86E86009585EC /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		ED5151CC29D46924003D66B6 /* database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = database.swift; path = ../../diplomaProject/diplomaProject/database.swift; sourceTree = "<group>"; };
+		ED5151CE29D46954003D66B6 /* FloorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloorView.swift; sourceTree = "<group>"; };
 		ED75385C29BA166400DDFAFD /* diplomaProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = diplomaProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED75385F29BA166400DDFAFD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ED75386329BA166400DDFAFD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -29,7 +28,6 @@
 		ED75386B29BA166600DDFAFD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED75386E29BA166600DDFAFD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED75387029BA166600DDFAFD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EDBAF71C29C38C7900188002 /* database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = database.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,16 +60,15 @@
 		ED75385E29BA166400DDFAFD /* diplomaProject */ = {
 			isa = PBXGroup;
 			children = (
-				ED6D971729C86E86009585EC /* MenuViewController.swift */,
 				ED75386329BA166400DDFAFD /* ViewController.swift */,
-				ED28977C29C4BE0B00B2D5DB /* FirstFloorView.swift */,
 				ED2924AC29C62DFF008593D8 /* MenuView.swift */,
+				ED5151CE29D46954003D66B6 /* FloorView.swift */,
 				ED75385F29BA166400DDFAFD /* AppDelegate.swift */,
 				ED75386B29BA166600DDFAFD /* Assets.xcassets */,
 				ED75386D29BA166600DDFAFD /* LaunchScreen.storyboard */,
 				ED75387029BA166600DDFAFD /* Info.plist */,
 				ED75386829BA166400DDFAFD /* diplomaProject.xcdatamodeld */,
-				EDBAF71C29C38C7900188002 /* database.swift */,
+				ED5151CC29D46924003D66B6 /* database.swift */,
 			);
 			path = diplomaProject;
 			sourceTree = "<group>";
@@ -152,11 +149,10 @@
 			files = (
 				ED2924AD29C62DFF008593D8 /* MenuView.swift in Sources */,
 				ED75386A29BA166400DDFAFD /* diplomaProject.xcdatamodeld in Sources */,
-				ED28977D29C4BE0B00B2D5DB /* FirstFloorView.swift in Sources */,
-				ED6D971829C86E86009585EC /* MenuViewController.swift in Sources */,
-				EDBAF71D29C38C7900188002 /* database.swift in Sources */,
 				ED75386429BA166400DDFAFD /* ViewController.swift in Sources */,
 				ED75386029BA166400DDFAFD /* AppDelegate.swift in Sources */,
+				ED5151CD29D46924003D66B6 /* database.swift in Sources */,
+				ED5151CF29D46954003D66B6 /* FloorView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
