@@ -18,19 +18,14 @@ class FloorView: UIView {
         let contentView = UIView()
         return contentView
     }()
-    let imageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "1floor"))
+    var imageView: UIImageView = {
+        var imageView = UIImageView(image: UIImage(named: "1 floor"))
         return imageView
     }()
-    
-    func initRooms() {
-        for room in rooms {
-            room.x *= self.frame.width / 271.29
-            room.y *= self.frame.width * 1.10582771204 / 300.0
-            room.x += imageView.frame.origin.x
-            room.y += imageView.frame.origin.y
-        }
+    func changeImage(_ index: Int) {
+        imageView.image = UIImage(named: String(index) + " floor")
     }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(scrollView)
@@ -56,14 +51,15 @@ class FloorView: UIView {
             imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             imageView.widthAnchor.constraint(equalToConstant: contentView.frame.width),
-            imageView.heightAnchor.constraint(equalToConstant: contentView.frame.width * 1.10582771204),
+            imageView.heightAnchor.constraint(equalToConstant: contentView.frame.width),
         ])
         layoutIfNeeded()
-        initRooms()
     }
     var circleLayers = [CAShapeLayer]()
     
-    func drawRoom(_ room: Room) {
+    func drawRoom(_ room: Dot) {
+        var zoomRect = zoomRectForScale(scale: 1, center: CGPoint(x: imageView.center.x, y: imageView.center.y))
+        scrollView.zoom(to: zoomRect, animated: true)
         let circlePath = UIBezierPath(arcCenter: CGPoint(x: room.x, y: room.y),
                                                   radius: 1,
                                                   startAngle: 0,
@@ -75,8 +71,9 @@ class FloorView: UIView {
         contentView.layer.addSublayer(circleLayer)
         circleLayers.append(circleLayer)
         
-        let zoomRect = zoomRectForScale(scale: 6, center: CGPoint(x: room.x, y: room.y))
+        zoomRect = zoomRectForScale(scale: 6, center: CGPoint(x: room.x, y: room.y))
         scrollView.zoom(to: zoomRect, animated: true)
+        
     }
     func removeCircles() {
         for circleLayer in circleLayers {
@@ -92,9 +89,8 @@ class FloorView: UIView {
         zoomRect.origin.y = newCenter.y - ((zoomRect.size.height / 2.0));
         return zoomRect
     }
-    func drawPath(_ room1: Room, _ room2: Room) {
-        
-        removeCircles()
+    func drawPath(_ room1: Dot, _ room2: Dot) {
+        //removeCircles()
         
         let linePath = UIBezierPath()
         

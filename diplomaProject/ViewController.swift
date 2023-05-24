@@ -22,19 +22,105 @@ extension State {
 
 class ViewController: UIViewController {
     
-    private var floorView: FloorView = {
+    private var floor0View: FloorView = {
         let floorView = FloorView()
+        floorView.changeImage(0)
         return floorView
     }()
+    private var floor1View: FloorView = {
+        let floorView = FloorView()
+        floorView.changeImage(1)
+        floorView.isHidden = true
+        return floorView
+    }()
+    private var floor2View: FloorView = {
+        let floorView = FloorView()
+        floorView.changeImage(2)
+        floorView.isHidden = true
+        return floorView
+    }()
+    private var floor3View: FloorView = {
+        let floorView = FloorView()
+        floorView.changeImage(3)
+        floorView.isHidden = true
+        return floorView
+    }()
+    private var floor4View: FloorView = {
+        let floorView = FloorView()
+        floorView.changeImage(4)
+        floorView.isHidden = true
+        return floorView
+    }()
+    private var floor5View: FloorView = {
+        let floorView = FloorView()
+        floorView.changeImage(5)
+        floorView.isHidden = true
+        return floorView
+    }()
+    var floorViewModel = FloorViewModel()
     
     private let menuView: MenuView = {
         let menuView = MenuView()
         return menuView
     }()
+    let segmentedControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl()
+        segmentedControl.insertSegment(withTitle: " 1 ", at: 1, animated: true)
+        segmentedControl.insertSegment(withTitle: " 2 ", at: 2, animated: true)
+        segmentedControl.insertSegment(withTitle: " 3 ", at: 3, animated: true)
+        segmentedControl.insertSegment(withTitle: " 4 ", at: 4, animated: true)
+        segmentedControl.insertSegment(withTitle: " 5 ", at: 5, animated: true)
+        segmentedControl.insertSegment(withTitle: " 0 ", at: 0, animated: true)
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.backgroundColor = UIColor(red: 0.102, green: 0.368, blue: 0.613, alpha: 1)
+        segmentedControl.layer.borderColor = UIColor.white.cgColor
+        segmentedControl.selectedSegmentTintColor = UIColor.white
+        segmentedControl.layer.borderWidth = 1
+        
+        let titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        segmentedControl.setTitleTextAttributes(titleTextAttributes, for:.normal)
+
+        let titleTextAttributes1 = [NSAttributedString.Key.foregroundColor: UIColor(red: 0.082, green: 0.308, blue: 0.517, alpha: 1)]
+        segmentedControl.setTitleTextAttributes(titleTextAttributes1, for:.selected)
+        
+        return segmentedControl
+    }()
+    
+    @objc func segmentedValueChanged(_ sender: UISegmentedControl!) {
+        floor0View.isHidden = true
+        floor1View.isHidden = true
+        floor2View.isHidden = true
+        floor3View.isHidden = true
+        floor4View.isHidden = true
+        floor5View.isHidden = true
+        switch sender.selectedSegmentIndex {
+            case 0:
+                floor0View.isHidden = false
+            case 1:
+                floor1View.isHidden = false
+            case 2:
+                floor2View.isHidden = false
+            case 3:
+                floor3View.isHidden = false
+            case 4:
+                floor4View.isHidden = false
+            case 5:
+                floor5View.isHidden = false
+            default:
+                break
+        }
+    }
     
     override func viewDidLoad() {
+        print("Viewdidload")
         super.viewDidLoad()
-        view.addSubview(floorView)
+        view.addSubview(floor0View)
+        view.addSubview(floor1View)
+        view.addSubview(floor2View)
+        view.addSubview(floor3View)
+        view.addSubview(floor4View)
+        view.addSubview(floor5View)
+        view.addSubview(segmentedControl)
         view.addSubview(menuView)
         view.backgroundColor = UIColor.white
         
@@ -44,36 +130,80 @@ class ViewController: UIViewController {
         
         setupConstraints()
         menuView.setupConstraints()
-        floorView.setupConstraints()
+        floor0View.setupConstraints()
+        floor1View.setupConstraints()
+        floor2View.setupConstraints()
+        floor3View.setupConstraints()
+        floor4View.setupConstraints()
+        floor5View.setupConstraints()
+        floorViewModel.initRooms(floor0View.frame.width, floor0View.imageView.frame.origin.x, floor0View.imageView.frame.origin.y)
         menuView.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         menuView.makeRouteButton.addTarget(self, action: #selector(makeRoutePressed), for: .touchUpInside)
         menuView.menuTopView.addGestureRecognizer(panRecognizer)
+        segmentedControl.addTarget(self, action: #selector(self.segmentedValueChanged(_:)), for: .valueChanged)
         
         self.hideKeyboardWhenTappedAround()
     }
     
     private var bottomOffset: CGFloat = -280
     private var bottomConstraint = NSLayoutConstraint()
-    private var filteredData = [Room]()
+    private var filteredData = [Dot]()
     private var isSearching = false
     private var makingRoute = 0
-    private var firstRoom = rooms[0]
-    private var secondRoom = rooms[1]
+    private var firstRoom: Dot = Dot(name: "nil", x: 0, y: 0, connected: [])
+    private var secondRoom: Dot = Dot(name: "nil", x: 0, y: 0, connected: [])
     
     private func setupConstraints() {
         bottomOffset += view.frame.height
         menuView.translatesAutoresizingMaskIntoConstraints = false
-        floorView.translatesAutoresizingMaskIntoConstraints = false
+        floor0View.translatesAutoresizingMaskIntoConstraints = false
+        floor1View.translatesAutoresizingMaskIntoConstraints = false
+        floor2View.translatesAutoresizingMaskIntoConstraints = false
+        floor3View.translatesAutoresizingMaskIntoConstraints = false
+        floor4View.translatesAutoresizingMaskIntoConstraints = false
+        floor5View.translatesAutoresizingMaskIntoConstraints = false
+        
+        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             menuView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             menuView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             menuView.heightAnchor.constraint(equalToConstant: view.frame.height - 100),
             
-            floorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            floorView.topAnchor.constraint(equalTo: view.topAnchor),
-            floorView.heightAnchor.constraint(equalToConstant: view.frame.height),
-            floorView.widthAnchor.constraint(equalToConstant: view.frame.width),
+            floor0View.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            floor0View.topAnchor.constraint(equalTo: view.topAnchor),
+            floor0View.heightAnchor.constraint(equalToConstant: view.frame.height),
+            floor0View.widthAnchor.constraint(equalToConstant: view.frame.width),
+            
+            floor1View.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            floor1View.topAnchor.constraint(equalTo: view.topAnchor),
+            floor1View.heightAnchor.constraint(equalToConstant: view.frame.height),
+            floor1View.widthAnchor.constraint(equalToConstant: view.frame.width),
+            
+            floor2View.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            floor2View.topAnchor.constraint(equalTo: view.topAnchor),
+            floor2View.heightAnchor.constraint(equalToConstant: view.frame.height),
+            floor2View.widthAnchor.constraint(equalToConstant: view.frame.width),
+            
+            floor3View.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            floor3View.topAnchor.constraint(equalTo: view.topAnchor),
+            floor3View.heightAnchor.constraint(equalToConstant: view.frame.height),
+            floor3View.widthAnchor.constraint(equalToConstant: view.frame.width),
+            
+            floor4View.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            floor4View.topAnchor.constraint(equalTo: view.topAnchor),
+            floor4View.heightAnchor.constraint(equalToConstant: view.frame.height),
+            floor4View.widthAnchor.constraint(equalToConstant: view.frame.width),
+            
+            floor5View.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            floor5View.topAnchor.constraint(equalTo: view.topAnchor),
+            floor5View.heightAnchor.constraint(equalToConstant: view.frame.height),
+            floor5View.widthAnchor.constraint(equalToConstant: view.frame.width),
+            
+            segmentedControl.topAnchor.constraint(equalTo: view.topAnchor, constant: 60),
+            segmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            segmentedControl.widthAnchor.constraint(equalToConstant: 200),
+            segmentedControl.heightAnchor.constraint(equalToConstant: 30)
         ])
         bottomConstraint = menuView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: bottomOffset)
         bottomConstraint.isActive = true
@@ -89,6 +219,7 @@ class ViewController: UIViewController {
        recognizer.addTarget(self, action: #selector(popupViewPanned(recognizer:)))
        return recognizer
     }()
+    
     @objc func makeRoutePressed() {
         makingRoute = 1
         self.menuView.searchBar.placeholder = "Я нахожусь"
@@ -97,10 +228,8 @@ class ViewController: UIViewController {
     
     private func animateTransitionIfNeeded(to state: State, duration: TimeInterval) {
             
-        // ensure that the animators array is empty (which implies new animations need to be created)
         guard runningAnimators.isEmpty else { return }
         
-        // an animator for the transition
         let transitionAnimator = UIViewPropertyAnimator(duration: duration, dampingRatio: 1, animations: {
             switch state {
             case .open:
@@ -113,10 +242,7 @@ class ViewController: UIViewController {
             self.view.layoutIfNeeded()
         })
         
-        // the transition completion block
         transitionAnimator.addCompletion { position in
-            
-            // update the state
             switch position {
                 case .start:
                     self.currentState = state.opposite
@@ -126,7 +252,6 @@ class ViewController: UIViewController {
                     ()
             }
             
-            // manually reset the constraint positions
             switch self.currentState {
                 case .open:
                     self.bottomConstraint.constant = 0
@@ -134,16 +259,12 @@ class ViewController: UIViewController {
                     self.bottomConstraint.constant = self.bottomOffset
             }
             
-            // remove all running animators
             self.runningAnimators.removeAll()
             
         }
         
-        
-        // start all animators
         transitionAnimator.startAnimation()
-        
-        // keep track of all running animators
+
         runningAnimators.append(transitionAnimator)
         
     }
@@ -225,7 +346,7 @@ extension ViewController: UISearchBarDelegate {
         }
         else {
             isSearching = true
-            filteredData = rooms.filter({$0.id.lowercased().contains(searchBar.text?.lowercased() ?? "")})
+            filteredData = floorViewModel.getAllRooms().filter({$0.name.lowercased().contains(searchBar.text?.lowercased() ?? "")})
         }
         menuView.tableView.reloadData()
     }
@@ -242,7 +363,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             return filteredData.count
         }
         else {
-            return rooms.count
+            return floorViewModel.getAllRooms().count
         }
     }
     
@@ -251,21 +372,21 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = UIColor(red: 0.102, green: 0.368, blue: 0.613, alpha: 1)
         cell.textLabel?.textColor = UIColor(red: 0.631, green: 0.725, blue: 0.808, alpha: 1)
         if isSearching {
-            cell.textLabel?.text = filteredData[indexPath.row].id
+            cell.textLabel?.text = filteredData[indexPath.row].name
         }
         else {
-            cell.textLabel?.text = rooms[indexPath.row].id
+            cell.textLabel?.text = floorViewModel.getAllRooms()[indexPath.row].name
         }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        var selectedRoom: Room
+        var selectedRoom: Dot
         if isSearching {
             selectedRoom = filteredData[indexPath.row]
         }
         else {
-            selectedRoom = rooms[indexPath.row]
+            selectedRoom = floorViewModel.getAllRooms()[indexPath.row]
         }
         if(makingRoute == 1) {
             self.firstRoom = selectedRoom
@@ -273,21 +394,61 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             menuView.searchBar.searchTextField.text = ""
             menuView.searchBar.placeholder = "До"
             menuView.tableView.reloadData()
-            //animateTransitionIfNeeded(to: State.open, duration: 1)
         }
         else if(makingRoute == 2) {
             self.secondRoom = selectedRoom
             self.makingRoute = 0
-            floorView.removeCircles()
-            floorView.drawPath(firstRoom, secondRoom)
+            
+            removeAllCircles()
+            
+            findPath(firstRoom, secondRoom)
+            
+            segmentedControl.selectedSegmentIndex = floorViewModel.getFloorOfDot(firstRoom)
+            segmentedControl.sendActions(for: .valueChanged)
+            
             self.menuView.searchBar.placeholder = "Найти"
             animateTransitionIfNeeded(to: State.closed, duration: 1)
         }
         else {
             animateTransitionIfNeeded(to: State.closed, duration: 1)
-            menuView.searchBar.searchTextField.text = selectedRoom.id
-            floorView.removeCircles()
-            floorView.drawRoom(selectedRoom)
+            menuView.searchBar.searchTextField.text = selectedRoom.name
+            
+            removeAllCircles()
+            
+            segmentedControl.selectedSegmentIndex = floorViewModel.getFloorOfDot(selectedRoom)
+            segmentedControl.sendActions(for: .valueChanged)
+            
+            let floor = floorViewModel.getFloorOfDot(selectedRoom)
+            if floor == 0 { floor0View.drawRoom(selectedRoom) }
+            else if floor == 1 { floor1View.drawRoom(selectedRoom) }
+            else if floor == 2 { floor2View.drawRoom(selectedRoom) }
+            else if floor == 3 { floor3View.drawRoom(selectedRoom) }
+            else if floor == 4 { floor4View.drawRoom(selectedRoom) }
+            else if floor == 5 { floor5View.drawRoom(selectedRoom) }
+        }
+    }
+    func removeAllCircles() {
+        floor0View.removeCircles()
+        floor1View.removeCircles()
+        floor2View.removeCircles()
+        floor3View.removeCircles()
+        floor4View.removeCircles()
+        floor5View.removeCircles()
+    }
+    func findPath(_ from: Dot, _ to: Dot) {
+        let path = floorViewModel.getPath(from, to)
+        for index in 0..<path.count - 1 {
+            let floor0 = floorViewModel.getFloorOfDot(path[index])
+            let floor1 = floorViewModel.getFloorOfDot(path[index + 1])
+
+            if floor0 != floor1 { continue }
+            
+            if floor0 == 0 { floor0View.drawPath(path[index], path[index + 1]) }
+            else if floor0 == 1 { floor1View.drawPath(path[index], path[index + 1]) }
+            else if floor0 == 2 { floor2View.drawPath(path[index], path[index + 1]) }
+            else if floor0 == 3 { floor3View.drawPath(path[index], path[index + 1]) }
+            else if floor0 == 4 { floor4View.drawPath(path[index], path[index + 1]) }
+            else if floor0 == 5 { floor5View.drawPath(path[index], path[index + 1]) }
         }
     }
 }
