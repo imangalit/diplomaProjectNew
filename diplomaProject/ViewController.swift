@@ -147,7 +147,7 @@ class ViewController: UIViewController {
     
     private var bottomOffset: CGFloat = -280
     private var bottomConstraint = NSLayoutConstraint()
-    private var filteredData = [Dot]()
+    private var filteredData: [[Dot]] = [[],[],[],[],[],[],[]]
     private var isSearching = false
     private var makingRoute = 0
     private var firstRoom: Dot = Dot(name: "nil", x: 0, y: 0, connected: [])
@@ -336,7 +336,13 @@ class InstantPanGestureRecognizer: UIPanGestureRecognizer {
 }
 extension ViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        self.filteredData.removeAll()
+        self.filteredData[0].removeAll()
+        self.filteredData[1].removeAll()
+        self.filteredData[2].removeAll()
+        self.filteredData[3].removeAll()
+        self.filteredData[4].removeAll()
+        self.filteredData[5].removeAll()
+
         guard searchText != "" || searchText != " " else {
             print("Empty Search")
             return
@@ -346,7 +352,12 @@ extension ViewController: UISearchBarDelegate {
         }
         else {
             isSearching = true
-            filteredData = floorViewModel.getAllRooms().filter({$0.name.lowercased().contains(searchBar.text?.lowercased() ?? "")})
+            filteredData[0] = floorViewModel.getFloorRooms(0).filter({$0.name.lowercased().contains(searchBar.text?.lowercased() ?? "")})
+            filteredData[1] = floorViewModel.getFloorRooms(1).filter({$0.name.lowercased().contains(searchBar.text?.lowercased() ?? "")})
+            filteredData[2] = floorViewModel.getFloorRooms(2).filter({$0.name.lowercased().contains(searchBar.text?.lowercased() ?? "")})
+            filteredData[3] = floorViewModel.getFloorRooms(3).filter({$0.name.lowercased().contains(searchBar.text?.lowercased() ?? "")})
+            filteredData[4] = floorViewModel.getFloorRooms(4).filter({$0.name.lowercased().contains(searchBar.text?.lowercased() ?? "")})
+            filteredData[5] = floorViewModel.getFloorRooms(5).filter({$0.name.lowercased().contains(searchBar.text?.lowercased() ?? "")})
         }
         menuView.tableView.reloadData()
     }
@@ -357,13 +368,18 @@ extension ViewController: UISearchBarDelegate {
     }
 }
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
-    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 6
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "\(section) Floor"
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
-            return filteredData.count
+            return filteredData[section].count
         }
         else {
-            return floorViewModel.getAllRooms().count
+            return floorViewModel.getFloorRooms(section).count
         }
     }
     
@@ -372,10 +388,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = UIColor(red: 0.102, green: 0.368, blue: 0.613, alpha: 1)
         cell.textLabel?.textColor = UIColor(red: 0.631, green: 0.725, blue: 0.808, alpha: 1)
         if isSearching {
-            cell.textLabel?.text = filteredData[indexPath.row].name
+            cell.textLabel?.text = filteredData[indexPath.section][indexPath.row].name
         }
         else {
-            cell.textLabel?.text = floorViewModel.getAllRooms()[indexPath.row].name
+            cell.textLabel?.text = floorViewModel.getFloorRooms(indexPath.section)[indexPath.row].name
         }
         return cell
     }
@@ -383,10 +399,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var selectedRoom: Dot
         if isSearching {
-            selectedRoom = filteredData[indexPath.row]
+            selectedRoom = filteredData[indexPath.section][indexPath.row]
         }
         else {
-            selectedRoom = floorViewModel.getAllRooms()[indexPath.row]
+            selectedRoom = floorViewModel.getFloorRooms(indexPath.section)[indexPath.row]
         }
         if(makingRoute == 1) {
             self.firstRoom = selectedRoom

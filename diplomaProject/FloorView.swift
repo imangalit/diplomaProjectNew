@@ -67,7 +67,7 @@ class FloorView: UIView {
                                                   clockwise: true)
         let circleLayer = CAShapeLayer()
         circleLayer.path = circlePath.cgPath
-        circleLayer.fillColor = UIColor.orange.cgColor
+        circleLayer.fillColor = UIColor.red.cgColor
         contentView.layer.addSublayer(circleLayer)
         circleLayers.append(circleLayer)
         
@@ -90,7 +90,6 @@ class FloorView: UIView {
         return zoomRect
     }
     func drawPath(_ room1: Dot, _ room2: Dot) {
-        //removeCircles()
         
         let linePath = UIBezierPath()
         
@@ -99,7 +98,7 @@ class FloorView: UIView {
 
         let lineLayer = CAShapeLayer()
         lineLayer.path = linePath.cgPath
-        lineLayer.strokeColor = UIColor.green.cgColor
+        lineLayer.strokeColor = UIColor.black.cgColor
         lineLayer.lineWidth = 2.0
 
         contentView.layer.addSublayer(lineLayer)
