@@ -21,7 +21,6 @@ extension State {
 }
 
 class ViewController: UIViewController {
-    
     private var floor0View: FloorView = {
         let floorView = FloorView()
         floorView.changeImage(0)
@@ -112,7 +111,6 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        print("Viewdidload")
         super.viewDidLoad()
         view.addSubview(floor0View)
         view.addSubview(floor1View)
@@ -127,7 +125,7 @@ class ViewController: UIViewController {
         menuView.searchBar.delegate = self
         menuView.tableView.dataSource = self
         menuView.tableView.delegate = self
-        
+
         setupConstraints()
         menuView.setupConstraints()
         floor0View.setupConstraints()
@@ -141,8 +139,20 @@ class ViewController: UIViewController {
         menuView.makeRouteButton.addTarget(self, action: #selector(makeRoutePressed), for: .touchUpInside)
         menuView.menuTopView.addGestureRecognizer(panRecognizer)
         segmentedControl.addTarget(self, action: #selector(self.segmentedValueChanged(_:)), for: .valueChanged)
-        
+        for case let button as UIButton in menuView.categoryScrollView.subviews {
+            button.addTarget(self, action: #selector(categoryButtonTapped(_:)), for: .touchUpInside)
+        }
         self.hideKeyboardWhenTappedAround()
+    }
+    @objc func categoryButtonTapped(_ sender: UIButton) {
+        guard let title = sender.title(for: .normal) else { return }
+        menuView.searchBar.text = title
+        menuView.searchBar.becomeFirstResponder()
+        searchBar(menuView.searchBar, textDidChange: title)
+        menuView.searchBar.didChangeValue(forKey: title)
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     private var bottomOffset: CGFloat = -280
@@ -250,6 +260,8 @@ class ViewController: UIViewController {
                     self.currentState = state
                 case .current:
                     ()
+                default:
+                    ()
             }
             
             switch self.currentState {
@@ -334,6 +346,8 @@ class InstantPanGestureRecognizer: UIPanGestureRecognizer {
         self.state = UIGestureRecognizer.State.began
     }
 }
+
+
 extension ViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.filteredData[0].removeAll()
@@ -372,7 +386,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return 6
     }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "\(section) Floor"
+        return "\(section) Этаж"
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSearching {
@@ -382,16 +396,27 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             return floorViewModel.getFloorRooms(section).count
         }
     }
-    
+    func convertName(_ name: String) -> String {
+        var x = ""
+        for i in name {
+            if (i == "r") {
+                x += " Кабинет"
+            }
+            else {
+                x = x + String(i)
+            }
+        }
+        return x
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.backgroundColor = UIColor(red: 0.102, green: 0.368, blue: 0.613, alpha: 1)
         cell.textLabel?.textColor = UIColor(red: 0.631, green: 0.725, blue: 0.808, alpha: 1)
         if isSearching {
-            cell.textLabel?.text = filteredData[indexPath.section][indexPath.row].name
+            cell.textLabel?.text = convertName(filteredData[indexPath.section][indexPath.row].name)
         }
         else {
-            cell.textLabel?.text = floorViewModel.getFloorRooms(indexPath.section)[indexPath.row].name
+            cell.textLabel?.text = convertName(floorViewModel.getFloorRooms(indexPath.section)[indexPath.row].name)
         }
         return cell
     }
@@ -408,6 +433,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             self.firstRoom = selectedRoom
             self.makingRoute = 2
             menuView.searchBar.searchTextField.text = ""
+            menuView.searchBar.becomeFirstResponder()
+            searchBarTextDidBeginEditing(menuView.searchBar)
             menuView.searchBar.placeholder = "До"
             menuView.tableView.reloadData()
         }
@@ -427,7 +454,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         else {
             animateTransitionIfNeeded(to: State.closed, duration: 1)
-            menuView.searchBar.searchTextField.text = selectedRoom.name
+            menuView.searchBar.searchTextField.text = convertName(selectedRoom.name)
             
             removeAllCircles()
             

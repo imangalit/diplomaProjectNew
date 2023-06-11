@@ -4,6 +4,10 @@
 <dict>
 	<key>MapTilerKey</key>
 	<string>NqAYuGTUKpYD1RZY4Qtf</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string></string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

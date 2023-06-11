@@ -9,6 +9,7 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
 class MenuView: UIView, UISearchBarDelegate {
+    let categories = ["Туалет", "Гардероб", "Кафе", "Библиотека", "Коворкинг"]
     
     let menuTopView: UIView = {
         let menuTopView = UIView()
@@ -31,6 +32,15 @@ class MenuView: UIView, UISearchBarDelegate {
         searchTextField?.attributedPlaceholder = NSAttributedString(string: "Найти", attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0.631, green: 0.725, blue: 0.808, alpha: 1)])
         return searchBar
     }()
+    public let categoryScrollView: UIScrollView = {
+        let categoryScrollView = UIScrollView()
+        categoryScrollView.showsHorizontalScrollIndicator = false
+        categoryScrollView.isHidden = true
+        let contentWidth = 100 * 5
+        categoryScrollView.contentSize = CGSize(width: contentWidth, height: 40)
+        return categoryScrollView
+    }()
+    
     public let tableView: UITableView = {
         let tableView = UITableView()
         tableView.isHidden = true
@@ -40,10 +50,12 @@ class MenuView: UIView, UISearchBarDelegate {
     public func hideAndShow(_ state: String) {
         if state == "open" {
             tableView.isHidden = false
+            categoryScrollView.isHidden = false
             makeRouteButton.isHidden = true
         }
         else {
             tableView.isHidden = true
+            categoryScrollView.isHidden = true
             makeRouteButton.isHidden = false
         }
     }
@@ -67,8 +79,24 @@ class MenuView: UIView, UISearchBarDelegate {
         addSubview(searchBar)
         addSubview(tableView)
         addSubview(makeRouteButton)
+        addSubview(categoryScrollView)
+        
+        setupCategories()
         
         menuTopView.addSubview(menuTopViewLine)
+    }
+    func setupCategories () {
+        var xOffset: CGFloat = 10
+        for category in categories {
+            let button = UIButton(type: .system)
+            button.frame = CGRect(x: xOffset, y: 0, width: 100, height: 40)
+            button.backgroundColor = UIColor(red: 0.082, green: 0.308, blue: 0.517, alpha: 1)
+            button.layer.cornerRadius = 10
+            button.setTitleColor(UIColor(red: 0.631, green: 0.725, blue: 0.808, alpha: 1), for: .normal)
+            button.setTitle(category, for: .normal)
+            categoryScrollView.addSubview(button)
+            xOffset += 110
+        }
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -80,6 +108,7 @@ class MenuView: UIView, UISearchBarDelegate {
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         makeRouteButton.translatesAutoresizingMaskIntoConstraints = false
+        categoryScrollView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             menuTopView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -97,7 +126,12 @@ class MenuView: UIView, UISearchBarDelegate {
             searchBar.widthAnchor.constraint(equalToConstant: frame.size.width - 20),
             searchBar.heightAnchor.constraint(equalToConstant: 50),
             
-            tableView.topAnchor.constraint(equalTo: searchBar.topAnchor, constant: 50),
+            categoryScrollView.topAnchor.constraint(equalTo: searchBar.topAnchor, constant: 70),
+            categoryScrollView.heightAnchor.constraint(equalToConstant: 40),
+            categoryScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            categoryScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            
+            tableView.topAnchor.constraint(equalTo: categoryScrollView.topAnchor, constant: 50),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -105,8 +139,10 @@ class MenuView: UIView, UISearchBarDelegate {
             makeRouteButton.topAnchor.constraint(equalTo: searchBar.topAnchor, constant: 60),
             makeRouteButton.widthAnchor.constraint(equalToConstant: frame.size.width - 30),
             makeRouteButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            makeRouteButton.heightAnchor.constraint(equalToConstant: 50)
+            makeRouteButton.heightAnchor.constraint(equalToConstant: 50),
+            
         ])
     }
 }
 
+// Туалет Кафе Гардероб Библиотека Коворкинг
