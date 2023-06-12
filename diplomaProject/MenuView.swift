@@ -98,6 +98,7 @@ class MenuView: UIView, UISearchBarDelegate {
             xOffset += 110
         }
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

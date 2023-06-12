@@ -31,6 +31,8 @@ class FloorViewModel {
         }
         return allRooms
     }
+    
+    
     func getFloorRooms(_ floor: Int) -> [Dot] {
         if floor < rooms.count {
             let filtered = rooms[floor].filter { room in

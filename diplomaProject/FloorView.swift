@@ -109,6 +109,8 @@ class FloorView: UIView {
         drawRoom(room2)
     }
 }
+
+
 extension FloorView: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return contentView

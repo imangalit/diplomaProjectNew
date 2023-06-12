@@ -390,6 +390,7 @@ extension ViewController: UISearchBarDelegate {
         }
     }
 }
+
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 6
