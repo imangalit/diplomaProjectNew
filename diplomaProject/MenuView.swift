@@ -9,7 +9,7 @@ import UIKit
 import UIKit.UIGestureRecognizerSubclass
 
 class MenuView: UIView, UISearchBarDelegate {
-    let categories = ["Туалет", "Гардероб", "Кафе", "Библиотека", "Коворкинг"]
+    let categories = ["Туалет М", "Туалет Ж", "Гардероб", "Буфет", "Библиотека", "Коворкинг"]
     
     let menuTopView: UIView = {
         let menuTopView = UIView()
@@ -36,7 +36,7 @@ class MenuView: UIView, UISearchBarDelegate {
         let categoryScrollView = UIScrollView()
         categoryScrollView.showsHorizontalScrollIndicator = false
         categoryScrollView.isHidden = true
-        let contentWidth = 100 * 5
+        let contentWidth = 100 * 7
         categoryScrollView.contentSize = CGSize(width: contentWidth, height: 40)
         return categoryScrollView
     }()

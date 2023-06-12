@@ -144,12 +144,21 @@ class ViewController: UIViewController {
         }
         self.hideKeyboardWhenTappedAround()
     }
+    
     @objc func categoryButtonTapped(_ sender: UIButton) {
         guard let title = sender.title(for: .normal) else { return }
-        menuView.searchBar.text = title
+        var str = title
+        str = str.replacingOccurrences(of: "Кабинет", with: "r")
+        str = str.replacingOccurrences(of: "Туалет М", with: "wm")
+        str = str.replacingOccurrences(of: "Туалет Ж", with: "ww")
+        str = str.replacingOccurrences(of: "Библиотека", with: "lb")
+        str = str.replacingOccurrences(of: "Коворкинг", with: "cw")
+        str = str.replacingOccurrences(of: "Буфет", with: "bf")
+        str = str.replacingOccurrences(of: "Гардероб", with: "wd")
+        menuView.searchBar.text = str
         menuView.searchBar.becomeFirstResponder()
-        searchBar(menuView.searchBar, textDidChange: title)
-        menuView.searchBar.didChangeValue(forKey: title)
+        searchBar(menuView.searchBar, textDidChange: str)
+        menuView.searchBar.didChangeValue(forKey: str)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -397,16 +406,21 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     func convertName(_ name: String) -> String {
-        var x = ""
-        for i in name {
-            if (i == "r") {
-                x += " Кабинет"
-            }
-            else {
-                x = x + String(i)
-            }
-        }
-        return x
+        var str = name
+        str = str.replacingOccurrences(of: "r", with: " Кабинет ")
+        str = str.replacingOccurrences(of: "ww", with: " Туалет женский ")
+        str = str.replacingOccurrences(of: "wm", with: " Туалет мужской ")
+        str = str.replacingOccurrences(of: "lb", with: " Библиотека ")
+        str = str.replacingOccurrences(of: "cw", with: " Коворкинг ")
+        str = str.replacingOccurrences(of: "bf", with: " Буфет ")
+        str = str.replacingOccurrences(of: "wd", with: " Гардероб ")
+        
+        str = str.replacingOccurrences(of: "Abl", with: " Абылай хан ")
+        str = str.replacingOccurrences(of: "Pan", with: " Панфилов ")
+        str = str.replacingOccurrences(of: "Tol", with: " Толе би ")
+        str = str.replacingOccurrences(of: "Kaz", with: " Казыбек би ")
+        
+        return str
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
